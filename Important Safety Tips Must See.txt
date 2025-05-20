@@ -1,0 +1,2 @@
+⚠️ IMPORTANT SECURITY NOTE: This is a demo version of MVP Password Manager.
+Passwords will be stored in plaintext in a local CSV file, do not use it to store real, sensitive passwords!

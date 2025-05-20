@@ -12,25 +12,47 @@ FIELD_NAMES = ["platform", "username", "password"] # CSV Header
 
 # --- Core Functions ---
 
-def generate_password(length: int = 12, use_uppercase: bool = True, use_digits: bool = True) -> str:
+# In password_logic.py
+
+import random
+import string
+# ... (keep other imports and constants like PASSWORD_FILE, FIELD_NAMES)
+
+# --- Core Functions ---
+def generate_password(length: int = 12, use_uppercase: bool = True, use_digits: bool = True, use_simple_symbols: bool = True) -> str: # Added use_simple_symbols
     """
     Generates a random password based on specified criteria.
-    V0.1: Uses only letters (upper/lower if specified) and digits. No special symbols.
+    Now includes an option for a simple set of symbols.
     """
-    characters = string.ascii_lowercase
+    characters = string.ascii_lowercase # Lowercase is always included by default
     if use_uppercase:
         characters += string.ascii_uppercase
     if use_digits:
         characters += string.digits
+    if use_simple_symbols:
+        characters += "+_.," # Your chosen simple symbols
     
-    if not characters: # Fallback if no character types are selected
-        return "Error:NoCharacterTypesSelected"
+    if not characters: 
+        # This case is less likely now if lowercase is always on, 
+        # but good to keep as a fallback or if you make lowercase optional later.
+        # If lowercase is always on, then characters will never be empty.
+        # If you made lowercase optional, this check is more relevant.
+        # For now, assuming lowercase is a base, it will always have characters.
+        # If you want truly no characters selected to be an error,
+        # you'd check if only lowercase is selected and if that's not desired.
+        # Let's ensure at least one character type is actively selected if lowercase isn't forced.
+        # For simplicity, if all options are False (and assuming lowercase could be optional), it's an error.
+        # But your current design implies lowercase is a base.
+        # So, if all *additional* options are false, it just uses lowercase.
+        # To ensure it doesn't fail if all checkboxes are off (and lowercase is on):
+        if not characters: # Should not happen if string.ascii_lowercase is the base
+             characters = string.ascii_lowercase # Fallback to lowercase if somehow all were deselected and base wasn't added
 
-    # (总司令，这里用了一个列表推导式和 .join() 来生成密码，简洁高效！)
-    # (random.choice(characters) 会从 characters 字符串中随机选一个字符)
-    # (for _ in range(length) 表示重复 length 次)
     password = "".join([random.choice(characters) for _ in range(length)])
     return password
+
+# ... (rest of your password_logic.py functions: add_password_entry, view_all_entries, search_entries, main_application_loop)
+# No changes needed to the CSV functions for this symbol addition in the generator.
 
 def add_password_entry():
     """Adds a new password entry to the vault."""
